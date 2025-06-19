@@ -1,4 +1,6 @@
 
+# Spring Framework6.2.8
+
 ## gradle project 등록
 
 ```sh
@@ -10,3 +12,11 @@ $ gradle init --type java-application --no-incubating --no-split-project --java-
 $ gradle run
 ```
 
+## Spring Boot Application 으로 변경
+
+```sh
+$ gradle build
+
+# Runs this project as a Spring Boot application
+$ gradle bootRun
+```
