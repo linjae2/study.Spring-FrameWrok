@@ -1,4 +1,4 @@
-package org.example.jpa.audit;
+package org.example.jpa;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
