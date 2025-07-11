@@ -16,9 +16,15 @@ public class RunnerConfig {
   public CommandLineRunner getTest1Runner() {
     return args -> {
       Thread thread = new Thread(() -> {
-        System.out.println("스레드 시작 " + LocalDateTime.now());
+        // System.out.println("스레드 시작 " + LocalDateTime.now());
         log.info("스레드 시작");
       });
+
+      log.trace("This is a TRACE message." );
+      log.debug("This is a DEBUG message." );
+      log.info ("This is an INFO message." );
+      log.warn ("This is a WARN message."  );
+      log.error("This is an ERROR message.");
 
       thread.start();
       thread.join();
