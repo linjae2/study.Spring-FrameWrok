@@ -1,6 +1,9 @@
 package org.study.runner;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +17,31 @@ public class RunnerConfig {
 
   @Bean
   public CommandLineRunner getTest1Runner() {
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(8);
+
     return args -> {
+      // 수행시긴이 긴 task (약 3초)
+      Runnable task1 = () -> {
+        log.info("start");
+        try {
+          Thread.sleep(3000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();;
+        }
+        log.info("finish");
+      };
+
+
       Thread thread = new Thread(() -> {
-        System.out.println("스레드 시작 " + LocalDateTime.now());
         log.info("스레드 시작");
+
+        // 0.1 초마다 한번씩 task를 수행시켜주길 바라고 만듦
+        executor.scheduleAtFixedRate(task1, 0, 100, TimeUnit.MILLISECONDS);
       });
 
       thread.start();
       thread.join();
+      log.info("프로그램 종료!");
     };
   }
 

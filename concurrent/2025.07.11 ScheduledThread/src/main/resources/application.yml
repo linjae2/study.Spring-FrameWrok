@@ -4,3 +4,10 @@ spring:
 
   profiles:
     active: dev
+
+logging:
+  register-shutdown-hook: false
+  config: classpath:logs/log4j2.xml
+  # level:
+  #   root: info
+  #   org.study.runner: trace
