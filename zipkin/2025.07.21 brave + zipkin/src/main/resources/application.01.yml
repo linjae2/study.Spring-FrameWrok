@@ -1,0 +1,38 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application.name: brave_zipkin_test
+
+
+management:
+  tracing:
+    sampling.probability: 1.0
+    enabled: true
+
+  zipkin:
+    tracing:
+      endpoint: "http://172.31.37.55:9411/api/v2/spans"
+
+# logging:
+#   level:
+#     org:
+#       hibernate:
+#         stat: DEBUG
+#         sql: debug
+#         type:
+#           descriptor:
+#             sql: trace
+#       springframework:
+#         jdbc:
+#           core:
+#             JdbcTemplate: DEBUG
+#             StatementCreatorUtils: TRACE
+# logging:
+#   pattern:
+#     level: "%5p [%X{traceId:-},%X{spanId:-}]"
+
+
+logging:
+  pattern:
+    level: "%5p [%X{traceId:-},%X{spanId:-}]"
