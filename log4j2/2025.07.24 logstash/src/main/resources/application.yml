@@ -1,0 +1,34 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: test-program
+
+  profiles:
+    active: dev
+
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+  output:
+    ansi:
+      enabled: always  # 콘솔 창에 출력되는 로깅 메세지를 색으로 구분해서 출력
+
+logging:
+  register-shutdown-hook: false
+  config: classpath:./config/logs/log4j2.xml    # 로그설정파일
+  # level:
+  #   root: info
+  #   org.study.runner: trace
+
+  # pattern:
+  #   console: "%clr{%d{yyyy.MM.dd HH:mm:ss}}{faint} %clr{%5p} [%10.50t] [%-25.50C{1.}] %m%n"
+
+  # ecs : Elastic Common Schema
+  structured.format:
+    # console: gelf
+    file: logstash # ecs, gelf, logstash

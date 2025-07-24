@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <Properties>
+    <Property name="LOG_PATH">logs</Property>
+    <Property name="DEFAULT_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] %5p ${sys:PID} --- [%15.15t] %-40.40c{1.} : %m%n%xwEx</Property>
+    <Property name="COLOR_PATTERN">[%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint}] %clr{%5p} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c}{cyan} %clr{:}{faint} %m%n%xwEx</Property>
+    <Property name="TEST_PATTERN">%d %5p [%c] %m%n</Property>
+
+    <Property name="PATTERN_01">%d{yyyy.MM.dd HH:mm:ss} %5p [%10.50t] [%-25.50C{1.}] %m%n</Property>
+    <Property name="logStashPattern">[%d{ISO8601}][%-5p][%-25c]%notEmpty{[%X{pipeline.id}]}%notEmpty{[%X{plugin.id}]} %m%n]</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+      <!-- <PatternLayout pattern="${PATTERN_01}"/> -->
+      <!-- <JsonTemplateLayout eventTemplateUri="classpath:./config/logs/MyLayout.json"/> -->
+      <!-- <StructuredLogLayout format="${sys:CONSOLE_LOG_STRUCTURED_FORMAT}" charset="${sys:CONSOLE_LOG_CHARSET}"/> -->
+      <!-- <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET}"/> -->
+      <!-- <encoder>
+        <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+      </encoder> -->
+
+      <!-- <Select>
+        <DefaultArbiter>
+          <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET}"/>
+        </DefaultArbiter>
+			</Select> -->
+      <!-- <StructuredLogLayout format="${sys:CONSOLE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET}"/> -->
+
+			<Select>
+				<SystemPropertyArbiter propertyName="CONSOLE_LOG_STRUCTURED_FORMAT">
+					<StructuredLogLayout format="${sys:CONSOLE_LOG_STRUCTURED_FORMAT}" charset="${sys:CONSOLE_LOG_CHARSET}"/>
+				</SystemPropertyArbiter>
+				<DefaultArbiter>
+					<PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET}"/>
+				</DefaultArbiter>
+			</Select>
+			<Filters>
+				<ThresholdFilter level="${sys:CONSOLE_LOG_THRESHOLD:-TRACE}"/>
+			</Filters>
+    </Console>
+    <Socket name="LogstashAppender" host="${sys:logstash.host.name:-172.31.37.55}"
+          port="${sys:logstash.port.number:-5000}"
+          reconnectionDelayMillis="50">
+      <!-- <PatternLayout pattern="${logStashPattern}" /> -->
+      <!-- <JsonTemplateLayout eventTemplateUri="classpath:./config/logs/MyLayout.json"/> -->
+      <StructuredLogLayout format="${sys:FILE_LOG_STRUCTURED_FORMAT}" charset="${sys:FILE_LOG_CHARSET}"/>
+    </Socket>
+  </Appenders>
+
+
+  <Loggers>
+    <!-- Root : 일반적인 로그 정책, 반드시 하나 정의해야함 -->
+    <Root level="INFO">
+      <AppenderRef ref="ConsoleAppender" />
+      <AppenderRef ref="LogstashAppender" />
+    </Root>
+  </Loggers>
+</Configuration>
