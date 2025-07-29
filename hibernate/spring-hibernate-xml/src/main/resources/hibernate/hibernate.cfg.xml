@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+
+        <!--<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>-->
+        <!--<property name="hibernate.connecDriver</">jdbc:mysql://localhost:8084/dohbedoh</property>-->
+        <!--<property name="hibernate.connection.username">burdaall</property>-->
+        <!--<property name="hibernate.connection.password">password</property>-->
+        <!--<property name="hibernate.connection.autocommit">true</property>-->
+        <!--<property name="hibernate.default_schema">BURDAALL</property>-->
+
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="show_sql">true</property>
+        <property name="format_sql">false</property>
+
+        <mapping resource="hibernate/com/dohbedoh/model/Company.hbm.xml"></mapping>
+        <!--<mapping resource="hibernate/org/dohbedoh/model/Address.hbm.xml"></mapping>-->
+        <!--<mapping resource="hibernate/org/dohbedoh/model/Contact.hbm.xml"></mapping>-->
+        <!--<mapping resource="hibernate/org/dohbedoh/model/Contract.hbm.xml"></mapping>-->
+        <!--<mapping resource="hibernate/org/dohbedoh/model/Employee.hbm.xml"></mapping>-->
+    </session-factory>
+</hibernate-configuration>

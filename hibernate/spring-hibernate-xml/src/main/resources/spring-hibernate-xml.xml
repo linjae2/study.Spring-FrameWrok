@@ -1,0 +1,17 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>database/database.properties</value>
+        </property>
+    </bean>
+
+    <import resource="config/datasource.xml" />
+    <import resource="config/hibernate.xml" />
+    <import resource="config/transaction.xml" />
+    <import resource="config/daos.xml" />
+
+</beans>

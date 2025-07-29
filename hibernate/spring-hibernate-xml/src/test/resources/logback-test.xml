@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+    <!-- Example of a Console appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Example of a File appender : this appender only write service package logs as defined by the service logger-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>maven-java-sandbox.log</file>
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Strictly speaking, the level attribute is not necessary since -->
+    <!-- the level of the root level is set to DEBUG by default.       -->
+    <root level="WARN">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- Set the log level to a specific package in the application -->
+    <!-- Setting the same appender to multiple logger may duplicate the logs (if appender attached to an ancestor) -->
+    <!-- Additivity flag specify whether the logging output should be send to the ancestors appender as well -->
+    <logger name="service" level="INFO" additivity="true">
+        <appender-ref ref="FILE" />
+    </logger>
+
+</configuration>
