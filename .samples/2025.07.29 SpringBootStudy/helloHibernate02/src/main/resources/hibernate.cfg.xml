@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!-- JDBC Database connection settings -->
+		<property name="connection.driver_class">org.mariadb.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mariadb://172.31.37.55:3401/test?characterEncoding=UTF-8&amp;serverTimezone=Asia/Seoul</property>
+		<property name="connection.username">sdman</property>
+		<property name="connection.password">snudh123</property>
+
+		<property name="dialect">org.hibernate.dialect.MariaDBDialect</property>
+		<property name="show_sql">true</property>
+		<property name="current_session_context_class">thread</property>
+		<property name="hbm2ddl.auto">create</property>
+		<property name="show_sql">true</property>
+		<property name="format_sql">true</property>
+
+		<mapping class="entity.Product" />
+	</session-factory>
+</hibernate-configuration>
