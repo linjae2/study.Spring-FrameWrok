@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: race-condition
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/racecondition
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+        format_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    org.hibernate:
+      SQL: debug
+      type: trace
+    org.springframework.data.redis.*: trace
+    org.springframework.cache.*: trace
