@@ -1,0 +1,51 @@
+server:
+  port: ${PORT:8101}
+
+  # https://velog.io/@on5949/Spring-Boot-%ED%94%84%EB%A1%9D%EC%8B%9C-X-Forwarded-%ED%97%A4%EB%8D%94-%EC%B2%98%EB%A6%AC
+  forward-headers-strategy: framework
+  tomcat:
+    remoteip:
+      host-header: X-Forwarded-Host
+      port-header: X-Forwarded-Port
+      protocol-header: X-Forwarded-Proto
+      remote-ip-header: X-Forwarded-For
+    use-relative-redirects: true
+
+  # JSessionId가 URL에 달려오는 현상 해결
+  servlet.session:
+    timeout: 5m
+    tracking-modes: cookie
+
+spring:
+  application:
+    name: uis
+
+  devtools.livereload.enabled: true
+
+  thymeleaf:
+    enabled: true
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    check-template-location: true
+
+eureka:
+  instance:
+    # 서비스의 호스트 이름이 아닌, IP 주소를 Eureka Server에 등록할지 여부
+    preferIpAddress: true
+    ip-address: ${IP_ADDR:172.31.37.51}
+
+    instance-id: ${eureka.instance.ip-address}:${server.port}
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URI:http://172.31.37.51:9988/eureka}
+
+#logging.config: classpath:log4j2.xml      # log4j2 설정파일 경로 설정
+# logging:
+#   config: classpath:config/log4j2.xml
+
+management.endpoints.web.exposure.include: "*"

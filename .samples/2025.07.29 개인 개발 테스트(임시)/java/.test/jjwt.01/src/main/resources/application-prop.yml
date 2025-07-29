@@ -1,0 +1,22 @@
+spring:
+  main.banner-mode: off
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://172.31.37.51:3401/alim
+    username: sdman
+    password: snudh!v123
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true;
+    shwo-sql: true
+
+logging:
+  level:
+    root: WARN
+    org.snudh: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE

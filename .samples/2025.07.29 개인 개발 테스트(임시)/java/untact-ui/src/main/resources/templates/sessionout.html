@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>환자대기</title>
+
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
+      background: #555;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-items: stretch;
+      margin: auto 10px;
+    }
+
+    .content {
+      flex-basis: 420px;
+      min-width: 350PX;
+      background: white;
+      margin: auto;
+      padding: 10px;
+    }
+
+    .content1 {
+      max-width: 470px;
+      background: white;
+      margin: auto;
+      padding: 10px;
+    }
+
+    ._header {
+      position:relative;
+      overflow:hidden;
+      margin-top: 6px; margin-bottom: 2px;
+      background-color: #004098;
+      width: 25%;
+      height: 5px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="content"
+       style="border: 5px solid red;
+              display: flex;
+              flex-direction: column;
+              row-gap: 20px;">
+    <div style="margin-top: 10px; text-align: center;"><img src="/service/imgs/exclamation.png"></div>
+    <div>
+      <div class="_header"></div>
+      <div>
+        <div style="margin-top: 5px; margin-left: 0px;font-size:17pt;">접속 경로가 유효하지 않습니다.</div>
+        <div style="margin-top: 15px;font-size:12pt; font-weight: bold; color:#8E8E8E; text-align: center;">
+          처음 접속후 일정시간이 경과 되었거나,</div>
+        <div style="margin-top: 15px;font-size:12pt; font-weight: bold; color:#8E8E8E; text-align: center;">
+          보안 토큰이 유효하지 않습니다.</div>
+      </div>
+    </div>
+
+    <div style="margin: 15px auto; text-align: center;">
+      <span style="font-size:17pt; font-weight: bold;">다시 시도해 주세요.</span></div>
+  </div>
+</body>
+</html>

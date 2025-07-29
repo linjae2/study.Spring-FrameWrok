@@ -1,0 +1,1 @@
+SELECT patno, patname FROM appatbat t WHERE t.patno = :patno

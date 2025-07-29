@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko"
+  xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"></meta>
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"></meta>
+  <meta name="description" content=""></meta>
+  <meta name="author" content=""></meta>
+  <title>서울대치과병원 진료카드</title>
+
+  <script src="/service/js/JsBarcode.code128.min.js"></script>
+  <link href="/service/css/card.css" rel="stylesheet"></link>
+</head>
+
+<body onload="JsBarcode('.barcode').init();" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <div class="masthead-content">
+    <div class="card">
+      <div class="div_header">
+        <div class="header_ele1" style="float: left; margin-left: 15px; margin-right: 20px"></div>
+        <div class="header_ele2" style="float: left; margin-right: 20px">서울대학교치과병원</div>
+        <div class="header_ele3" style="float: left; margin-right: 20px"></div>
+        <div class="header_ele4" style="float: right; margin-right: 15px">진료카드</div>
+      </div>
+      <div class="div_info">
+        <div style="height:20px"></div>
+        <div class="div_no"><div class="label div_txt_no">등 록 번 호</div><div th:text="${txtno}" class="div_val_no">00 00 0000</div></div>
+        <div class="div_nm"><div class="label div_txt_nm">성 명</div><div th:text="${patname}" class="div_val_nm">성명</div></div>
+        <div class="div_bc">
+          <svg class="barcode"
+               jsbarcode-format="auto"
+               jsbarcode-width="4"
+               jsbarcode-height="60"
+               jsbarcode-background="#f2f2f3"
+               jsbarcode-displayvalue="false" th:jsbarcode-value="${patno}">
+          </svg>
+        </div>
+      </div>
+    </div>
+  <div>
+</body>
+</html>

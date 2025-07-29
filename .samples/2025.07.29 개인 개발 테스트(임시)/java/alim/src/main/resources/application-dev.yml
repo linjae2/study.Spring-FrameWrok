@@ -1,0 +1,39 @@
+server.port: ${PORT:8021}
+
+spring:
+  # datasource:
+  #   url: jdbc:h2:mem:batchdb
+  #   username: sa
+  #   password:
+  #   driverClassName: org.h2.Driver
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://172.31.37.51:3401/alim
+    username: sdman
+    password: snudh!v123
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    shwo-sql: true
+  h2:
+    console:                    # H2 DB를 웹에서 관리할 수 있는 기능
+      enabled: true
+      path: /h2-console
+
+eureka:
+  instance:
+    # 서비스의 호스트 이름이 아닌, IP 주소를 Eureka Server에 등록할지 여부
+    preferIpAddress: true
+    ip-address: ${IP_ADDR:172.31.37.16}
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+#   level:
+#     org.hibernate.SQL: DEBUG
+#     org.hibernate.orm.jdbc.bind: TRACE

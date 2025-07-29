@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:batchdb
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    shwo-sql: true
+  h2:
+    console:                    # H2 DB를 웹에서 관리할 수 있는 기능
+      enabled: true
+      path: /h2-console
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+#   level:
+#     org.hibernate.SQL: DEBUG
+#     org.hibernate.orm.jdbc.bind: TRACE

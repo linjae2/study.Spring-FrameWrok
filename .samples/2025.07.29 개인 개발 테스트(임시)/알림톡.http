@@ -1,0 +1,38 @@
+
+post https://api.mtsco.co.kr/sndng/atk/sendMessage HTTP/1.1
+content-type: application/json; charset=utf-8
+
+{
+    "auth_code" : "1P7cUq9bYyIanKlgTRj3yQ=="
+  , "sender_key":"26dc6c15158be6a70a4363dea7733e43cb833f25"
+  , "nation_phone_number":"82"
+  , "phone_number":"01072006269"
+  , "template_code":"TST_02"
+  , "message":"[서울대학교치과병원]\n\n홍지연 (등록번호- 00252350)님 08/12(월) 오후 2시  구강내과(2층) 장지희교수 진료예약\n\n[예약 취소 및 변경]\n\n전화 : 1522-2700\n\n■ 본인-신분증 확인 의무화(24년 5월 20일부터 신분증 지참 필수)\n\n   불편하시더라도 꼭 신분증을 지참하여 주시길 부탁드립니다\n   (※ 신분증 미지참시 진료비 전액을 본인부담하셔야 합니다)\n\n● 진료비 자동결제(바로결제) 서비스 운영 안내\n\n신용카드를 미리 수납창구에서 신청등록하시면 이후에는 수납창구 방문없이 진료비가 다음날 자동결제 됩니다\n\n감사합니다."
+  , "callback_number":"1522-2700"
+  ,"attachment":{"button":[
+    {
+      "name":"진찰권보기","type":"WL", "url_mobile":"https://sign.snudh.org/service/eyJwdG4iOiIwMTAyODgwNCIsIm1kdCI6MTcyOTYzOTgwMCwibWRkIjoiMDMifQ.G0fdIymVDGfGi9Hnot8Hqw-MQp4A8iMFI9rjVGDceYA/1"
+    },
+    {
+      "name":"진료예약변경","type":"WL", "url_mobile":"https://sign.snudh.org/service/eyJwdG4iOiIwMTAyODgwNCIsIm1kdCI6MTcyOTYzOTgwMCwibWRkIjoiMDMifQ.G0fdIymVDGfGi9Hnot8Hqw-MQp4A8iMFI9rjVGDceYA/2"
+    },
+    {
+      "name":"진료실도착알림","type":"WL", "url_mobile":"https://sign.snudh.org/service/eyJwdG4iOiIwMTAyODgwNCIsIm1kdCI6MTcyOTYzOTgwMCwibWRkIjoiMDMifQ.G0fdIymVDGfGi9Hnot8Hqw-MQp4A8iMFI9rjVGDceYA/99"
+    }
+    ]}
+}
+
+#####
+
+post https://api.mtsco.co.kr/rspns/atk/rspnsMessages
+content-type: application/json; charset=utf-8
+
+{
+    "auth_code" : "1P7cUq9bYyIanKlgTRj3yQ=="
+  , "sender_key":"26dc6c15158be6a70a4363dea7733e43cb833f25"
+  , "send_date":"20241023"
+  , "page" : 1
+  ,"count" : 20
+}
+#####

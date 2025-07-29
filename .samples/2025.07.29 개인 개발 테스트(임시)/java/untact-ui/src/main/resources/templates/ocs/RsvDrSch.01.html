@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko"
+  xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>진료의 스케줄</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+
+  <script type="module" src="/service/elix/define/CalendarMonthNavigator.js"></script>
+  <link href="/service/css/reservation.css" rel="stylesheet"></link>
+
+</head>
+<body>
+  <div id="calendar"></div>
+  <script type="text/javascript">
+    axios.get("http://172.31.37.51:8080/api/v1/rsvdate/RsvDrSch/01071276/2024-10-18T08:30:00/03")
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  </script>
+
+<script type="module">
+  // Import the Elix components we want to use.
+  import CalendarMonthNavigator from '/service/elix/define/CalendarMonthNavigator.js';
+  import * as calendar from "/service/elix/src/base/calendar.js";
+
+  const calendarMonthNavigator = new CalendarMonthNavigator();
+  calendarMonthNavigator.locale = "ko-KR";
+  calendarMonthNavigator.showCompleteWeeks = false;
+
+  // calendarMonthNavigator.addEventListener("datechange", function() {
+  //   //alert(calendarMonthNavigator.date);
+  //   //alert(calendarMonthNavigator.date.toLocaleDateString());
+  //   //alert(toStringByFormatting(calendarMonthNavigator.date, "-"));
+  // })
+
+  // We can add the components to the page like any other HTML elements.
+  var cal = document.getElementById("calendar");
+  cal.appendChild(calendarMonthNavigator);
+
+  window.addEventListener("DOMContentLoaded", function() {
+    //실행될 코드
+    //alert(calendarMonthNavigator.date.toLocaleDateString());
+  });
+</script>
+
+<script type="text/javascript">
+  window.addEventListener("DOMContentLoaded", function() {
+    calendarMonthNavigator.addEventListener("datechange", function() {
+      alert(calendarMonthNavigator.date);
+      //alert(calendarMonthNavigator.date.toLocaleDateString());
+      //alert(toStringByFormatting(calendarMonthNavigator.date, "-"));
+    })
+  });
+</script>
+</body>
+</html>

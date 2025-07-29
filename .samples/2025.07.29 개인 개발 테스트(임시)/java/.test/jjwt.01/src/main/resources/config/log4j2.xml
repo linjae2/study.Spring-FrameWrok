@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- status : log4j2 내부적으로 로그를 남기는데
+     이때 어떤 레벨로 로그를 만길지 지정하는 것이다-->
+<!-- monitorInterval : 설정한 초단위 당 한 번씩 log4j2.xml이
+     변경되었는지 감지하여 재구동 없이 바로 적용시켜준다-->
+<Configuration status="info" monitorInterval="30">
+  <Properties>
+    <Property name="logPath">./logs</Property>
+    <Property name="logPattern">[%-5level] %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1} - %msg%n</Property>
+    <Property name="serviceName">application</Property>
+    <Property name="filename">logs/${sys:filename:-default.lgo}</Property>
+    <Property name="BASE_DIR">./logs</Property>
+    <Property name="LOG_FORMAT">[%date{yyyy-MM-dd HH:mm:ss}] %level %logger{36}(%file:%line) - %msg%n</Property>
+    <Property name="logPattern">[%-5level] %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${logPattern}"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Root level="warn">
+      <AppenderRef ref="Console" />
+    </Root>
+  </Loggers>
+</Configuration>

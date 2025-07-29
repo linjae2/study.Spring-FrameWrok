@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>환자대기</title>
+
+  <style>
+    html, body {
+      margin: 0; padding: 0;
+      height: 100%;
+      background: #555;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-items: stretch;
+      margin: auto 10px;
+    }
+
+    .content {
+      flex-basis: 420px;
+      min-width: 350PX;
+      background: white;
+      margin: auto;
+      padding: 10px;
+    }
+
+    .content1 {
+      max-width: 470px;
+      background: white;
+      margin: auto;
+      padding: 10px;
+    }
+
+    ._header {
+      position:relative;
+      overflow:hidden;
+      margin-top: 6px; margin-bottom: 2px;
+      background-color: #004098;
+      width: 25%;
+      height: 5px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="content" style="border: 1px solid red">
+    <div class="_header"></div>
+
+    <div>
+      <span style="font-size:25pt; font-weight: bold; color:#004098;">[[${meddept}]]</span>
+      <span th:unless="${#strings.isEmpty(meddrnm)}" style="font-size:17pt;">[[${meddrnm}]]의</span>
+    </div>
+
+    <div style="margin-top:20px; text-align: center;">
+      <span style="font-size:22pt; font-weight: bold;">현재 대기 환자수는</span></div>
+
+    <div style="margin-top:25px; text-align: center;">
+      <span style="font-size:45pt; font-weight: bold;">4 명</span>
+      <span style="font-size:12pt;">입니다.</span >
+    </div>
+
+    <div style="margin-top:5px;">
+      <span style="font-size:14pt; font-weight: bold;">진료실 도착 확인을 진행 하시겠습니까?</span></div>
+    <div style="display:flex; flex: 1 0%; margin-top:20px;">
+      <div style="flex-grow: 1;"></div>
+      <div><button style="font-size: 15pt; cursor: pointer; margin-right: 20px;">확인</button></div></div>
+  </div>
+</body>
+</html>

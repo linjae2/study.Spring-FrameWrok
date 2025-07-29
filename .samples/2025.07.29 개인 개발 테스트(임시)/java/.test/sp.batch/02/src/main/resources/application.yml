@@ -1,0 +1,22 @@
+server:
+  port: 9090
+
+spring:
+  application.name: SimpleBatch
+
+  datasource:
+    url: jdbc:h2:mem:batchdb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+
+  h2:
+    console: # H2 DB를 웹에서 관리할 수 있는 기능
+      enabled: true
+      path: /h2-console
+
+batch:
+  jdbc:
+    initialize-schema: ALWAYS
+  job:
+    enabled: true

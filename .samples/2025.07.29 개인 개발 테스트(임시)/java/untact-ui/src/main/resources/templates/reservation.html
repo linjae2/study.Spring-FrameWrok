@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ko"
+  xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"></meta>
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"></meta>
+  <meta name="description" content=""></meta>
+  <meta name="author" content=""></meta>
+  <title>서울대치과병원 진료예약</title>
+
+  <link href="/service/css/reservation.css" rel="stylesheet"></link>
+  <style>
+    * {box-sizing: border-box;}
+    a, a:active, a:hover {text-decoration: none;}
+
+    .mainc {
+      border: 0px solid red;
+      max-width: 470px;
+      min-width: 370px;
+      /* margin: -150px 0px 0px -235px; */
+      overflow: auto;
+    }
+    .img_ico {background: url(/service/imgs/ico_20241024.png) no-repeat;}
+
+    header {
+      height: 40px;
+      border-bottom: 1px solid #dee2e6 !important;
+      margin-top: 15px;
+      margin-bottom: 25px;
+    }
+
+    #btnServiceMenu.btn_menu.img_ico {
+      cursor: pointer;
+      width:25px; height: 20px;margin:5px 10px;padding:0;
+      border: 0px;
+    }
+
+    #wrapSideMenu {
+      background-color: #fff;
+      border-right: 1px solid #ddd;
+      height: 100%;
+      margin: 0 0 0 -271px;
+      padding: 0;
+      position: fixed;
+      text-align: center;
+      top: 0;
+      transition-duration: .3s;
+      transition-timing-function: ease-in;
+      width: 260px;
+      z-index: 10000
+    }
+
+    #wrapSideMenu.open {margin-left: 0px}
+
+    #wrapSideMenu .wrap_side_profile {
+      background: #f8f8f8;
+      height: 200px;
+    }
+
+    #wrapSideMenu .wrap_side_profile .img_ico {
+      background-position: -25px 0;
+      height: 60px; width: 60px;
+      margin: 0 auto 12px;
+    }
+
+    #wrapSideMenu .wrap_side_service_menu li {
+      margin: 0 auto;
+      width: 240px;
+      list-style: none;
+    }
+
+    #wrapSideMenu .wrap_side_service_menu li a {
+      display: block;
+      height: 48px;
+      position: relative
+    }
+
+    #wrapSideMenu .wrap_side_service_menu li a:hover {
+      color: #00c6be
+    }
+
+    #wrapSideMenu .wrap_side_service_menu li a:hover span {
+      border-bottom: 1px solid #00c6be;
+      display: block;
+      position: absolute;
+      top: 17px;
+    }
+
+    #wrapSideMenu .wrap_side_service_menu li a:hover span.bar_left {
+      left: 50px
+    }
+
+    #wrapSideMenu .wrap_side_service_menu li a:hover span.bar_right {
+      right: 50px
+    }
+
+    #wrapSideMenu .wrap_side_service_menu li a span {
+      width: 14px
+    }
+
+    .bookcontainer {
+      display: flex;
+      flex-direction: column;
+      font-size: 15pt;
+    }
+    .bookcontainer > div {
+      border: 0px solid red;
+      flex-basis: 20px;
+    }
+    .booktimes {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+    .booktimes > div {
+      border: 0px solid red;
+      padding-right: 5px;
+      flex-basis: 90px;
+      flex-grow: 0;
+    }
+
+    div#telcont {
+      position: relative;
+      margin-left: 10px;
+      margin-top: 8px;
+    }
+
+    div#telcont input {
+      font-size: 15px;
+      color: #222222;
+      width: 180px;
+      border: none;
+      border-bottom: solid #aaaaaa 1px;
+      padding-bottom: 10px;
+      padding-left: 10px;
+      position: relative;
+      background: none;
+      z-index: 5;
+    }
+
+    div#telcont input::placeholder { color: #aaaaaa; }
+    div#telcont input:focus { outline: none; }
+
+    div#telcont span {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0%;  /* right로만 바꿔주면 오 - 왼 */
+      background-color: #666;
+      width: 0;
+      height: 2px;
+      border-radius: 2px;
+      transition: 0.5s;
+    }
+
+    div#telcont label {
+      position: absolute;
+      color: #aaa;
+      left: 10px;
+      font-size: 20px;
+      bottom: 8px;
+      transition: all .2s;
+    }
+
+    div#telcont input:focus ~ label, div#telcont input:valid ~ label {
+      font-size: 16px;
+      bottom: 40px;
+      color: #666;
+      font-weight: bold;
+    }
+
+    div#telcont input:focus ~ span, div#telcont input:valid ~ span {
+      width: 180px;
+    }
+  </style>
+
+  <script type="text/javascript" src="/service/js/CalendarMonthNavigator.2024.10.28.js"></script>
+  <script type="text/javascript" src="/service/js/axios-1.7.7/axios.js"></script>
+  <script type="text/javascript" src="/service/js/dayjs-1.11.13/dayjs.js"></script>
+  <script type="text/javascript" src="/service/js/format.2.0.9.js"></script>
+
+  <script type="text/javascript">
+    function oninputPhone(target) {
+      target.value = target.value
+          .replace(/[^0-9]/g, '')
+          .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1-$2-$3");
+    }
+
+    function requestConsult() {
+      let rchg = document.getElementById("rsvchange");
+      let rcal = document.getElementById("reqcall");
+
+      rchg.style.display = "none";
+      rcal.style.display = "block";
+
+      let bg = document.getElementById("wrapbg");
+      let sm = document.getElementById("wrapSideMenu");
+      if (sm.classList.contains("open")) {
+        bg.style.visibility = "hidden";
+        sm.classList.remove("open");
+      }
+    }
+
+    function requestCancel() {
+      if(confirm("진료 예약을 취소 하시겠습니까?")) {
+      };
+    }
+  </script>
+</head>
+
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+  <div class="mainc">
+    <header styel="margin-top:480px;">
+      <div style="float:left">
+        <button id="btnServiceMenu" type="button"
+           class="btn_menu img_ico"></button>
+      </div>
+      <div style="float:left;
+                  width: 50%;
+                  text-align: center;"></div>
+      <div style="float:right;margin-right: 15px;">
+        <img src="/service/imgs/snudh.svg" height="30" alt="서울대학교치과병원">
+      </div>
+    </header>
+
+    <div style="font-size:15pt;
+                border-bottom: 10px solid #EEEEEE;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                margin: 0px 5px 25px;">
+      <ul style="line-height: 170%;">
+        <li> 이 름 : [[${patname}]]([[${patno}]])님</li>
+        <li> 진료일 : [[${#temporals.format(meddate, "yyyy년 MM월 dd일")}]]</li>
+        <li> 진료과 : [[${meddept}]]</li>
+        <li th:unless="${#strings.isEmpty(meddrnm)}"> 진료의 : [[${meddrnm}]]</li>
+        <li> 예약시간 : [[${#temporals.format(meddate, "HH시 mm분")}]]</li>
+      </ul>
+    </div>
+
+    <div id="reqcall" style="margin-left: 20px; display: none;">
+      <div style="display: flex; gap: 20px; margin-left:10px;margin-bottom:50px;">
+        <div style="font-size:14pt">진료 삼담을 위한 콜백 요청을 등록합니다.</div>
+      </div>
+
+      <div style="display:flex; margin-top:24px; margin-bottom: 15px;">
+        <div id="telcont" style="flex:1;">
+          <input id="telno" type="text" required oninput="oninputPhone(this)" maxlength="14" value="">
+          <label>전화번호</label>
+          <span></span>
+        </div>
+        <div style="padding-top:5px;">
+          <button id="btnCallBack" style="font-size:15pt; font-weight: bold; margin-right: 40px; cursor: pointer;">콜백신청</button></div>
+      </div>
+      <span style="font-size:10pt;">※ 전화번호 미 기재시 본원에 등록된 번호로 신청 됩니다.</span>
+    </div>
+
+    <div id="rsvchange" style="margin-left: 20px; display: none;">
+      <div style="display: flex; margin-left:10px;flex-wrap: wrap;text-align: center;">
+        <div id="calendar" style="font-size: 19pt;flex-basis: 580px;"></div>
+
+        <div style="border: 0px solid red;
+                    flex-basis: 480px; margin-top: 45px;
+                    display: flex; flex-direction: column;
+                    font-size: smaller;">
+          <div style="border-bottom:1.5px solid blue;
+                      font-size: large;
+                      font-weight: bold;
+                      text-align: center;
+                      padding: 0.3em;
+                      margin-bottom: 0.5em;">예약가능</div>
+          <div class="bookcontainer" style="flex-grow: 1;">
+            <div id="rsam" style="line-height: 180%; margin-bottom:5px"></div>
+
+            <div id="rspm" style="line-height: 180%; margin-bottom:5px"></div>
+
+            <div style="flex-grow: 1;"></div>
+
+            <div style="text-align: right;">
+              <button style="font-size:15pt; font-weight: bold; margin-right: 40px;">예약변경</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="wrapbg" style="position:absolute;top:0;left:0;height: 100%;width: 100%; background: #000;opacity: 0.5; visibility: hidden;">a</div>
+  <div id="wrapSideMenu">
+    <main>
+      <div class="wrap_side_profile">
+        <div style="height:45px;"></div>
+        <div class="img_ico"></div>
+        <p class="slogan">진료예약 관리</p>
+      </div>
+
+      <div class="wrap_side_service_menu " style="height: 406px;">
+        <ul style="line-height: 250%;">
+          <li><a href="#" onclick="requestConsult(); return false;"><span class="bar_left"></span>진료상담<span class="bar_right"></span></a></li>
+          <li><a href="#" onclick="requestCancel(); return false;"><span class="bar_left"></span>예약취소<span class="bar_right"></span></a></li>
+        </ul>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="msgresult">
+    <div>abcd</div>
+    <div>abcd</div>
+    <div>abcd</div>
+    <div>abcd</div>
+  </dialog>
+
+  <script>
+    let medcals = null;
+    let medym = null;
+    function getRsvTimes(meddate) {
+      // document.querySelector('input[name="radioName"]:checked').value;
+      // var value = document.querySelector('input[name="pnt"]:checked').value;
+      let rsam = document.getElementById("rsam");
+      rsam.innerHTML = `<span style="float: left;">오 전 :</span><div class="booktimes" style="padding-left:5px;"></div>`;
+      let amdiv = rsam.querySelector(".booktimes");
+
+      let rspm = document.getElementById("rspm");
+      rspm.innerHTML = `<span style="float: left;">오 후 :</span><div class="booktimes" style="padding-left:5px;"></div>`;
+      let pmdiv = rspm.querySelector(".booktimes");
+
+      axios.get(`/service/api/v1/RsvDrSchTimes/${meddate}`)
+      .then(res => {
+        console.log(res.data);
+        var times = res.data;
+        //let t11 = new Date("1970-01-01" + times[0] + 'Z')
+        //let t1 = dayjs(t11).;
+        times.forEach((t, i) => {
+          // let time = t.split(":").reduce((a, c) => a * 60 + parseInt(c), 0);
+          // console.log(`${t} ==> ${time}`);
+          let t2 = dayjs("1970-01-02T" + t)
+          let time = t2.unix();
+          //console.log(`${t} ==> ${time}`);
+
+          let t1 = dayjs.unix(time);
+          //console.log(t1.format("HH:mm"));
+
+          eldiv = time < 97200? amdiv : pmdiv;
+          let div = document.createElement("div");
+          let elname = t1.format("HHmm");
+          div.innerHTML = `<input type="radio" id="rs_${elname}" name="rstime" class="rstime" value="${time}""><label for="rs_${elname}" class="rstime">${t1.format("hh:mm")}</label>`;
+          eldiv.appendChild(div);
+        });
+
+        //console.log(t1.format());
+        console.log("============");
+      })
+    }
+
+    function onMedDayChanged(event) {
+      //alert(event.detail.date);
+      let $d = dayjs(event.detail.date)
+      console.log(`    onMedDayChanged => ${dayjs($d).format("YYYY-MM-DD")}`);
+      if (medym == $d.format("YYYY-MM")) {
+        getRsvTimes($d.format("YYYY-MM-DD"));
+      } else {
+        axios.get(`/service/api/v1/RsvDrSchMonth/${$d.format("YYYY-MM")}`)
+          .then(res => {
+            console.log(res.data);
+            medym = res.data.medYM;
+            let firstd = SetMedStatus(medcals, res.data.days);
+            let meddate = dayjs(`${medym}-${format("00", firstd)}`);
+
+            medcals.date = meddate.$d;
+            getRsvTimes(meddate.format("YYYY-MM-DD"));
+          });
+      }
+    }
+
+    function SetMedStatus(medcals, days) {
+      let firstd = 0;
+      const ds = medcals.days;
+      days.forEach((el, idx) => {
+        if (el != 0 && firstd == 0) firstd = idx + 1;
+        //ds[idx].toggleAttribute("not-available", el === 0);
+        ds[idx].toggleAttribute("rsv-available", el != 0);
+      });
+      return firstd;
+    }
+
+    window.addEventListener("DOMContentLoaded", function() {
+      const calendarMonthNavigator = new CalendarMonthNavigator();
+      calendarMonthNavigator.locale = "ko-KR";
+      calendarMonthNavigator.showCompleteWeeks = false;
+
+      var cald = document.getElementById("calendar");
+      cald.appendChild(calendarMonthNavigator);
+      medcals = calendarMonthNavigator;
+      medcals.addEventListener("datechange", onMedDayChanged);
+
+      axios.get("/service/api/v1/RsvDrSch")
+      //axios.get("/service/api/v1/RsvDrSch/01072243/2024-10-24T09:00:00/05")
+      .then(res => {
+        console.log(res.data);
+        if (res.data.rsvInfo != null) {
+          let rsvmenu = document.getElementById("btnServiceMenu");
+          let bg = document.getElementById("wrapbg");
+
+          rsvmenu.addEventListener("click", function() {
+            var sm = document.getElementById("wrapSideMenu");
+            bg.style.visibility = "visible";
+            sm.classList.add("open");
+          });
+
+          bg.addEventListener("click", function() {
+            var sm = document.getElementById("wrapSideMenu");
+            if (sm.classList.contains("open")) {
+              bg.style.visibility = "hidden";
+              sm.classList.remove("open");
+            }
+          });
+
+          let rchg = document.getElementById("rsvchange");
+          let rcal = document.getElementById("reqcall");
+
+          // 예약 정보가 유효함.
+          if (res.data.days != null) {
+            tmpdd = dayjs(`${medym}-"01"`);
+            if (medym != tmpdd.format("YYYY-MM"))
+            {
+              medym = res.data.medYM;
+              medcals.date = tmpdd.$d;
+            }
+
+            let firstd = SetMedStatus(medcals, res.data.days);
+            let meddate = dayjs(`${medym}-${format("00", firstd)}`);
+
+            medcals.date = meddate.$d;
+            getRsvTimes(meddate.format("YYYY-MM-DD"));
+
+            rchg.style.display = "block";
+            rcal.style.display = "none";
+          } else
+          { // 진료예약 변경 불가.
+            rchg.style.display = "none";
+            rcal.style.display = "block";
+          }
+        } else
+        { // 유효하지 않은 경로로 접속하였을 수 있습니다.
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+    });
+  </script>
+
+</body>
+</html>

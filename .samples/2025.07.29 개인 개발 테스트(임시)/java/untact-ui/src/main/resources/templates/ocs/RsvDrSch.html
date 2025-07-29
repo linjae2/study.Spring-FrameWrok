@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko"
+  xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>진료의 스케줄</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+
+  <script type="text/javascript">
+    var _rsvinfo = {
+      patno: "[[${patno}]]",
+      medept: "[[${medept}]]",
+      medYM: "[[${medYM}]]",
+    }
+  </script>
+</head>
+<body>
+  [[${rsvInfo.drname}]]
+  <div>
+    [[${days}]]
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <td>Title</td>
+        <td>Author</td></tr>
+    </thead>
+      <tr th:each="day, dayStat : ${days}">
+        <td th:text="${dayStat.index + 1}">Title</td>
+        <td th:text="${day}">day</td>
+        <td th:if="${day} != 0">http://172.31.37.51:8080/api/v1/rsvdate/RsvDrSchDay/[[${rsvInfo.rsvdr}]]/[[${#temporals.format(medYM, "yyyy-MM")}]]-[[${#numbers.formatInteger(dayStat.index + 1, 2)}]]/[[${medept}]]/[[${rsvInfo.tx_time}]]/[[${rsvInfo.overlap}]]</td>
+      </tr>
+    <tbody>
+    </tbody>
+  </table>
+
+  <script type="text/javascript">
+    axios.get("/api/v1/rsvdate/RsvDrSchDay/P0056/2024-10-14/05/30/Y")
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  </script>
+</body>
+</html>

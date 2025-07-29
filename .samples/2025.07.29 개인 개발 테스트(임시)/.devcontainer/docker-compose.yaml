@@ -1,0 +1,100 @@
+services:
+  discovery:
+    image: injae/discovery-services
+    container_name: eureka
+    restart: always
+    build:
+      context: ../java/discovery
+      dockerfile: .dockers/Dockerfile
+
+    environment:
+      PORT: 9988
+      #EUREKA_URI: http://172.31.37.51::9988/eureka
+
+    ports:
+    - 9988:9988
+
+  gateway:
+    image: injae/gateway-services
+    container_name: gateway
+    restart: always
+    build:
+      context: ../java/gateway
+      dockerfile: .dockers/Dockerfile
+
+    environment:
+      PORT: 8080
+      EUREKA_URI: http://172.31.37.51:9988/eureka
+    ports:
+    - 8080:8080
+
+    depends_on:
+    - discovery
+
+  ocs:
+    image: injae/ocs-services
+    container_name: ocs
+    restart: always
+    build:
+      context: ../java/ocs
+      dockerfile: .dockers/Dockerfile
+
+    environment:
+      PORT: 8001
+      EUREKA_URI: http://172.31.37.51:9988/eureka
+    ports:
+    - 8001:8001
+
+    depends_on:
+    - discovery
+
+  alim:
+    image: injae/alim-services
+    container_name: alim
+    restart: always
+    build:
+      context: ../java/alim
+      dockerfile: .dockers/Dockerfile
+
+    environment:
+      PORT: 8021
+      EUREKA_URI: http://172.31.37.51:9988/eureka
+    ports:
+    - 8021:8021
+
+    depends_on:
+    - discovery
+
+  hwan:
+    image: injae/hwan-services
+    container_name: hwan
+    restart: always
+    build:
+      context: ../java/hwan
+      dockerfile: .dockers/Dockerfile
+
+    environment:
+      PORT: 8041
+      EUREKA_URI: http://172.31.37.51:9988/eureka
+    ports:
+    - 8021:8021
+
+    depends_on:
+    - discovery
+
+  uis:
+    image: injae/uis-services
+    container_name: uis
+    restart: always
+    build:
+      context: ../java/untact-ui
+      dockerfile: .dockers/Dockerfile
+
+    environment:
+      PORT: 8101
+      EUREKA_URI: http://172.31.37.51:9988/eureka
+    ports:
+    - 8101:8101
+
+    depends_on:
+    - discovery

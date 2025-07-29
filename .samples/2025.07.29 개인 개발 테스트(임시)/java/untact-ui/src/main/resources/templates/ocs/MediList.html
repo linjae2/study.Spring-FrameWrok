@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko"
+  xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-size: 10pt;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>
+      <tr>
+        <td>Title</td>
+        <td>Author</td>
+        <td>meddept</td>
+        <td>meddr</td>
+    </thead>
+      <tr th:if="${books.empty}">
+        <td colspan="2">No Books Avaliable</td>
+      </tr>
+      <tr th:each="book, bookStat : ${books}">
+        <td th:text="${bookStat.index}">Title</td>
+        <td th:text="${book.patno}">Title</td>
+        <td th:text="${book.patname}">patname</td>
+        <td th:text="${book.meddept}">meddept</td>
+        <td th:text="${book.meddr}">meddr</td>
+        <td>http://172.31.37.51:8080/api/v1/rsvdate/RsvDrSch/[[${book.patno}]]/[[${#temporals.format(book.rsvdate, "yyyy-MM-dd'T'HH:mm:ss")}]]/[[${book.meddept}]]</td>
+        <td>http://172.31.37.51:8080/service/ocs/RsvDrSch/[[${book.patno}]]/[[${#temporals.format(book.rsvdate, "yyyy-MM-dd'T'HH:mm:ss")}]]/[[${book.meddept}]]</td>
+      </tr>
+    <tbody>
+    </tbody>
+  </table>
+</body>
+</html>

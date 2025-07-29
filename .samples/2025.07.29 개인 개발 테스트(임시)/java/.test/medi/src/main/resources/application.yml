@@ -1,0 +1,30 @@
+spring:
+  application.name: medi-app
+
+  ocs:
+    datasource:
+      driver-class-name: com.sybase.jdbc42.jdbc.SybDriver
+      url: jdbc:sybase:Tds:172.16.90.236:3000/ocs?charset=iso_1&JAVA_CHARSET_MAPPING=ms949
+      #url: jdbc:sybase:Tds:172.16.90.235:5000/ocs?charset=iso_1&JAVA_CHARSET_MAPPING=ms949
+      username: ocs
+      password: ocs123
+
+  mediinfo:
+    datasource:
+      driver-class-name: org.mariadb.jdbc.Driver
+      url: jdbc:mariadb://172.31.37.51:3306/medibook
+      username: poly
+      password: 1234
+
+  jpa:
+    hibernate.ddl-auto: none
+    properties.hibernate.show-sql: true
+
+org.jobrunr:
+  background-job-server.enabled: true
+  dashboard.enabled: true
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://172.31.37.51:3306/toy
+    username: poly
+    password: 1234

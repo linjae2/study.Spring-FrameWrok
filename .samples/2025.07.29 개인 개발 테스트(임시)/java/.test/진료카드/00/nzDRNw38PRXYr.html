@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"></meta>
+<meta name="description" content=""></meta>
+<meta name="author" content=""></meta>
+<title>서울대병원 진료카드</title>
+
+<script src="./vendor/jquery/jquery.min.js"></script>
+<script src="./vendor/barcode/JsBarcode.all.min.js"></script>
+
+<link href="./css/card.css" rel="stylesheet"></link>
+
+</head>
+
+<body onload="JsBarcode('.barcode').init();" oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+	<!-- <header class="masthead text-center text-white"> -->
+	<div class="masthead-content">
+        <div class="card">
+            <div class="div_header">
+                <div class="header_ele1" style="float: left; margin-left: 15px; margin-right: 20px"><img src="./img/card/card_triangle.png" style="width: 20px" /></div>
+                <div class="header_ele2" style="float: left; margin-right: 20px"><img src="./img/card/logo_eng.png" style="width: 100px" /></div>
+                <div class="header_ele3" style="float: left; margin-right: 20px"><img src="./img/card/logo_kor.png" style="width: 120px" /></div>
+                <div class="header_ele4" style="float: right; margin-right: 15px"><img src="./img/card/card_title.png" style="width: 80px" /></div>
+            </div>
+            <div class="div_info">
+                <div class="div_no"><div class="label div_txt_no">등록번호</div><div class="div_val_no">337 00 52 6</div></div>
+                <div class="div_nm"><div class="label div_txt_nm">성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;명</div><div class="div_val_nm">이인재</div></div>
+                <div class="div_rrn"><div class="label div_txt_rrn">생년월일</div><div class="div_val_rrn">751217-1</div></div>
+                <div class="div_bc">
+                    <svg class="barcode"
+                      jsbarcode-format="auto"
+                      jsbarcode-width="2"
+                      jsbarcode-height="40"
+                      jsbarcode-background="#f2f2f3"
+                      jsbarcode-displayvalue="false" jsbarcode-value="33700526">
+                    </svg>
+                </div>
+                <div class="div_hspt_main"><img src="./img/card/bg_hspt.png" style="background-color: #f2f2f3" /></div>
+            </div>
+        </div>
+
+	</div>
+</body>
+</html>

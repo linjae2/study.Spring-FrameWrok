@@ -1,0 +1,9 @@
+spring:
+  application.name: jobrunr
+
+  #datasource:
+  #  url: jdbc:h2:mem:testdb;
+
+org.jobrunr:
+  background-job-server.enabled: true
+  dashboard.enabled: true

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- status : log4j2 내부적으로 로그를 남기는데
+     이때 어떤 레벨로 로그를 만길지 지정하는 것이다-->
+<!-- monitorInterval : 설정한 초단위 당 한 번씩 log4j2.xml이
+     변경되었는지 감지하여 재구동 없이 바로 적용시켜준다-->
+<Configuration monitorInterval="30">
+  <Properties>
+    <property name="logging.path">${bundle:application:spring.logging.path}</property>
+    <property name="max.size">${bundle:application:spring.logging.max.size}</property>
+    <property name="application.name">${bundle:application:spring.application.name}</property>
+    <Property name="LOG_PATTERN">%d{HH:mm:ss.SSS} [%p] --- [%10.50t] %-1.50c{1.}.%-1.20M:%L: %m%n%ex</Property>
+    <Property name="logPattern">[%-5level] %d{yyyy-MM-dd HH:mm:ss} [%t] %c{1} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${logPattern}"/>
+    </Console>
+  </Appenders>
+
+  <Loggers>
+    <Root level="warn">
+      <AppenderRef ref="Console" />
+    </Root>
+
+  </Loggers>
+</Configuration>
