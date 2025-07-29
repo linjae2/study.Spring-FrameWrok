@@ -1,0 +1,10 @@
+spring.application.name:jobrunr
+
+spring:
+  datasource:
+    driverClassName: org.mariadb.jdbc.Driver
+    url=jdbc: mariadb://172.31.37.51:3306/toy
+    username: poly
+    password: 1234
+  hikari:
+    connection-timeout: 3000
