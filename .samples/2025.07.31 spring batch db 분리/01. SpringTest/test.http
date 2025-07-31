@@ -1,0 +1,14 @@
+####
+
+PUT http://localhost:9900/api/v1/posts/22
+Content-Type: application/json
+
+{
+  "title": "title",
+  "content": "content",
+  "author": "author"
+}
+
+####
+
+GET http://localhost:9900/api/v1/posts/22

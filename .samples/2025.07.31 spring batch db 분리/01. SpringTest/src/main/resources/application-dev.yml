@@ -1,0 +1,25 @@
+spring:
+  main:
+    web-application-type: NONE
+
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    url: jdbc:mariadb://172.31.37.55:3401/test?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: sdman
+    password: snudh!v123
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      # ddl-auto: update
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        # ... 다른 설정들
+        mapping_resources: classpath*:hbm.xml # 또는 여러 파일일 경우, classpath*:hbm.xml
+
+logging.level:
+  org.hibernate.engine.spi: TRACE

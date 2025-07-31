@@ -1,0 +1,41 @@
+server:
+  port: ${PORT:9900}
+
+spring:
+  application:
+    name: app
+  main.banner-mode: off
+  profiles.active: dev
+
+  # main.web-application-type: NONE
+
+  datasource:
+    hikari:
+      maximum-pool-size: 10
+    url: jdbc:mariadb://172.31.37.55:3401/test?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: sdman
+    password: snudh!v123
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  batch:
+    job:
+      enabled: false
+      # name: ${job.name:NONE}
+    jdbc:
+      initialize-schema: ALWAYS
+      # initialize-schema: NEVER
+
+    datasource:
+      hikari:
+        maximum-pool-size: 10
+      url: jdbc:mariadb://172.31.37.55:3401/batch_meta?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+      username: batch
+      password: snudh!v123
+      driver-class-name: org.mariadb.jdbc.Driver
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
