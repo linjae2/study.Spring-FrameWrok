@@ -31,18 +31,33 @@ spring:
         generate_statistics: true
 
 management:
+  endpoint:
+    # 각각의 endpoint 마다 자세한 값을 보여줄 지 지정할 수 있다.
+    health:
+      show-details: always # default : never
+
+  Endpoints:
+    web:
+      exposure:
+
+        # 웹으로 노출하고 싶은 endpoint를 지정
+        include: health, prometheus # default : health
+
+      # 매트릭을 확인할 base-url을 지정
+      base-path: /actuator          # default : /actuator
+
   tracing:
     enabled: true
     sampling.probability: 1.0
-    propagation:
-      type: B3
-
+    propagation:         # 추적 정보 전파 방식 (wbc, b3, b3_multi)
+      produce: b3_multi  # 추적 정보를 여러 개의 헤더로 나누어 전송
+      consume: b3        # HTTP 헤더를 사용하여 추적 ID, 스팬 ID 등을 전달
 
   zipkin:
     tracing:
       endpoint: "http://172.31.37.55:9411/api/v2/spans"
 
-# logging:
+logging:
 #   level:
 #     org:
 #       hibernate:
@@ -57,6 +72,8 @@ management:
 #             JdbcTemplate: DEBUG
 #             StatementCreatorUtils: TRACE
 
-# logging:
-#   pattern:
-#     level: "%5p [%X{traceId:-},%X{spanId:-}]"
+  pattern:
+    console: "%5p [%X{traceId:-},%X{spanId:-}] - %msg%n"
+
+  # register-shutdown-hook: false
+  # config: classpath:./config/log4j2.xml

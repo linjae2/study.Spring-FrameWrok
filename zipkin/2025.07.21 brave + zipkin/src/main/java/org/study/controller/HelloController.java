@@ -14,6 +14,7 @@ public class HelloController {
   @GetMapping
   public String getIndex() {
     log.info("called Hello::getIndex");
+    log.info(">> Hello::getIndex");
     return "Hello from Spring Boot!";
   }
 }
