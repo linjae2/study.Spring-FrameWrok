@@ -1,0 +1,15 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: test**
+    key-store-type: PKCS12
+
+spring:
+  application:
+    name: Spring-SSL
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
