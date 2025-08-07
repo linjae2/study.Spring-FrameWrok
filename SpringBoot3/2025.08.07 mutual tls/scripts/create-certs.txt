@@ -1,0 +1,105 @@
++ command -v openssl
+
++ rm -rf certs/ca*
++ cat > certs/openssl.cnf <<_END_
+  [alt_names]
+  DNS.1 = example.com
+  DNS.2 = localhost
+  IP.1 = 127.0.0.1
+  [ server_cert ]
+  subjectAltName = @alt_names
+  keyUsage = digitalSignature, keyEncipherment
+  nsCertType = server
+  [ client_cert ]
+  subjectAltName = @alt_names
+  keyUsage = digitalSignature, keyEncipherment
+  nsCertType = client
+_END_
+
++ openssl genrsa -out certs/ca.key 4096
++ openssl req -key certs/ca.key -out certs/ca.crt \
+  -x509 -new -nodes -sha256 -days 365 \
+  -subj '/O=Spring Boot Test/CN=Certificate Authority' \
+  -addext subjectAltName=DNS:example.com,DNS:localhost,DNS:127.0.0.1
+
+=> generate_cert redis/redis-server-certs server
+============================================================================
++ rm -rf redis/redis-server-certs/*
++ openssl genrsa -out redis/redis-server-certs/tls.key 2048
++ openssl req -key redis/redis-server-certs/tls.key \
+  -new -sha256 -subj '/O=Spring Boot Test/CN=localhost' \
+  -addext subjectAltName=DNS:example.com,DNS:localhost,DNS:127.0.0.1 |
+  openssl x509 -req -out redis/redis-server-certs/tls.crt \
+  -CA certs/ca.crt -CAkey certs/ca.key \
+  -CAserial certs/ca.txt -CAcreateserial -sha256 -days 365 \
+  -extfile certs/openssl.cnf -extensions server_cert
+
+=> generate_cert books-server/src/main/resources/redis-client-certs client
+============================================================================
++ openssl genrsa -out books-server/src/main/resources/redis-client-certs/tls.key 2048
++ openssl req -key books-server/src/main/resources/redis-client-certs/tls.key \
+  -new -sha256 -subj '/O=Spring Boot Test/CN=localhost' \
+  -addext subjectAltName=DNS:example.com,DNS:localhost,DNS:127.0.0.1
++ openssl x509 -req -out books-server/src/main/resources/redis-client-certs/tls.crt \
+  -CA certs/ca.crt -CAkey certs/ca.key -CAserial certs/ca.txt -CAcreateserial \
+  -sha256 -days 365 -extfile certs/openssl.cnf -extensions client_cert
+
+=> generate_cert books-server/src/main/resources/web-server-certs server
+============================================================================
++ openssl genrsa -out books-server/src/main/resources/web-server-certs/tls.key 2048
++ openssl req -key books-server/src/main/resources/web-server-certs/tls.key -new -sha256 -subj '/O=Spring Boot Test/CN=localhost' -addext subjectAltName=DNS:example.com,DNS:localhost,DNS:127.0.0.1
++ openssl x509 -req -out books-server/src/main/resources/web-server-certs/tls.crt -CA certs/ca.crt -CAkey certs/ca.key -CAserial certs/ca.txt -CAcreateserial -sha256 -days 365 -extfile certs/openssl.cnf -extensions server_cert
+
+=> generate_cert books-client/src/main/resources/web-client-certs client
+============================================================================
++ openssl genrsa -out books-client/src/main/resources/web-client-certs/tls.key 2048
++ openssl req -key books-client/src/main/resources/web-client-certs/tls.key -new -sha256 -subj '/O=Spring Boot Test/CN=localhost' -addext subjectAltName=DNS:example.com,DNS:localhost,DNS:127.0.0.1
++ openssl x509 -req -out books-client/src/main/resources/web-client-certs/tls.crt -CA certs/ca.crt -CAkey certs/ca.key -CAserial certs/ca.txt -CAcreateserial -sha256 -days 365 -extfile certs/openssl.cnf -extensions client_cert
+
+
++ for dir in redis/redis-server-certs books-server/src/main/resources/redis-client-certs books-server/src/main/resources/web-server-certs books-client/src/main/resources/web-client-certs
++ cp certs/ca.crt redis/redis-server-certs
++ echo ''
+
++ echo 'Certificates in '\''redis/redis-server-certs'\'''
+Certificates in 'redis/redis-server-certs'
++ ls -l redis/redis-server-certs
+total 12
+-rw-rw-r-- 1 injae injae 1976 Aug  7 14:12 ca.crt
+-rw-rw-r-- 1 injae injae 1627 Aug  7 14:12 tls.crt
+-rw-r--r-- 1 injae injae 1704 Aug  7 14:12 tls.key
++ for dir in redis/redis-server-certs books-server/src/main/resources/redis-client-certs books-server/src/main/resources/web-server-certs books-client/src/main/resources/web-client-certs
++ cp certs/ca.crt books-server/src/main/resources/redis-client-certs
++ echo ''
+
++ echo 'Certificates in '\''books-server/src/main/resources/redis-client-certs'\'''
+Certificates in 'books-server/src/main/resources/redis-client-certs'
++ ls -l books-server/src/main/resources/redis-client-certs
+total 12
+-rw-rw-r-- 1 injae injae 1976 Aug  7 14:12 ca.crt
+-rw-rw-r-- 1 injae injae 1627 Aug  7 14:12 tls.crt
+-rw------- 1 injae injae 1704 Aug  7 14:12 tls.key
++ for dir in redis/redis-server-certs books-server/src/main/resources/redis-client-certs books-server/src/main/resources/web-server-certs books-client/src/main/resources/web-client-certs
++ cp certs/ca.crt books-server/src/main/resources/web-server-certs
++ echo ''
+
++ echo 'Certificates in '\''books-server/src/main/resources/web-server-certs'\'''
+Certificates in 'books-server/src/main/resources/web-server-certs'
++ ls -l books-server/src/main/resources/web-server-certs
+total 12
+-rw-rw-r-- 1 injae injae 1976 Aug  7 14:12 ca.crt
+-rw-rw-r-- 1 injae injae 1627 Aug  7 14:12 tls.crt
+-rw------- 1 injae injae 1704 Aug  7 14:12 tls.key
++ for dir in redis/redis-server-certs books-server/src/main/resources/redis-client-certs books-server/src/main/resources/web-server-certs books-client/src/main/resources/web-client-certs
++ cp certs/ca.crt books-client/src/main/resources/web-client-certs
++ echo ''
+
++ echo 'Certificates in '\''books-client/src/main/resources/web-client-certs'\'''
+Certificates in 'books-client/src/main/resources/web-client-certs'
++ ls -l books-client/src/main/resources/web-client-certs
+total 12
+-rw-rw-r-- 1 injae injae 1976 Aug  7 14:12 ca.crt
+-rw-rw-r-- 1 injae injae 1627 Aug  7 14:12 tls.crt
+-rw------- 1 injae injae 1704 Aug  7 14:12 tls.key
++ for dir in redis/redis-server-certs
++ chmod go+r redis/redis-server-certs/tls.key

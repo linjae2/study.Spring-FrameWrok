@@ -1,0 +1,170 @@
+:spring-boot-docs: https://docs.spring.io/spring-boot
+
+= Securing Spring Boot applications with SSL/TLS
+:toc:
+
+This repository contains a sample of configuring Spring Boot client and server applications and a Redis server to use SSL/TLS for two-way (mutual) authentication.
+
+== Architecture
+
+There are two applications named `books-server` and `books-client` in this sample, each in their own modules.
+
+The server application is a web server providing a REST endpoint `/api/books` that returns a list of books from Redis using Spring Data Redis.
+
+The client application configures a `RestTemplate`, a `RestClient`, and a `WebClient` for communicating with the server.
+This is done to show the SSL configuration for both types of REST clients.
+Each REST client is used to call the server endpoint and print the results to `stdout`.
+
+=== Docker Compose
+
+When running the server application locally, a Redis server will be started automatically using {spring-boot-docs}/reference/features/dev-services.html#features.dev-services.docker-compose[Spring Boot's support for Docker Compose].
+
+The included link:books-server/docker-compose.yml[Docker Compose file] uses https://docs.docker.com/compose/profiles/[Docker Compose profiles] to start the Redis server without or with SSL configuration using `default` and `ssl` profiles.
+Docker Compose profiles are similar to Spring Boot profiles, but they work independently of each other.
+
+=== SSL Bundles
+
+Secure SSL connections are configured for communication between the server application and Redis, and between the client and server applications.
+In the Spring Boot applications, this is done using the {spring-boot-docs}/reference/features/ssl.html[SSL bundles feature] to load and apply PEM certificates.
+
+For the `books-server` application, SSL bundles are defined and applied using link:books-server/src/main/resources/application.yml[properties in the `application.yml` file] to configure the Redis client connection and the web server.
+The web server is also configured to require client authentication.
+
+For the `books-client` application, an SSL bundle is defined using link:books-client/src/main/resources/application.yml[properties in the `application.yml` file] and applied by customizing the link:books-client/src/main/java/org/example/books/client/RestTemplateConfiguration.java[`RestTemplate`], link:books-client/src/main/java/org/example/books/client/RestClientConfiguration.java[`RestClient`], and link:books-client/src/main/java/org/example/books/client/WebClientConfiguration.java[`WebClient`] using Spring Boot APIs.
+
+== Running the Sample Locally Without SSL
+
+The sample can be run without any SSL authentication to make sure everything is working in the simplest configuration.
+
+First, start the `books-server` application and the Redis database:
+
+[source,bash]
+----
+./gradlew :books-server:bootRun
+----
+
+When the server application is running and ready to accept connections, it should display log messages containing text similar to this example:
+
+[source]
+----
+...
+... o.s.b.d.c.l.DockerComposeLifecycleManager : Using Docker Compose file '/home/user/projects/spring-boot-ssl-demo/books-server/docker-compose.yml'
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis  Creating
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis  Created
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis  Starting
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis  Started
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis  Waiting
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis  Healthy
+...
+... o.example.books.server.BooksApplication  : Started BooksApplication in 2.0 seconds (process running for 2.2)
+----
+
+NOTE: If the server application is run using any other means (such as an IDE), make sure that the current working directory is the directory containing the `books-server/docker-compose.yml` file so that the Redis server is started automatically.
+
+Next, run the `books-client` application:
+
+[source,bash]
+----
+./gradlew :books-client:bootRun
+----
+
+The client application should start, with output similar to the following:
+
+[source]
+----
+Attempting to connect to server with RestTemplate
+
+Successfully connected to server with RestTemplate and received response:
+Book[...]
+Book[...]
+...
+
+Attempting to connect to server with RestClient
+
+Successfully connected to server with RestClient and received response:
+Book[...]
+Book[...]
+...
+
+Attempting to connect to server with WebClient
+
+Successfully connected to server with WebClient and received response:
+Book[...]
+Book[...]
+...
+----
+
+The list of books from the server can be viewed as JSON at `http://localhost:8080/books` or as an HTML page at `http://localhost:8080`.
+
+== Running the Sample Locally With SSL
+
+When running these samples locally, the https://www.openssl.org/[`openssl` toolkit] will be used to generate certificates using a self-signed certificate authority.
+`openssl` must be installed before following the instructions below.
+
+First, generate a root certificate authority and a set of certificates from the CA.
+The Redis server, `books-server` application, and `books-client` application will each get their own certificates that identify them to the other components that they need to communicate with.
+
+[source,bash]
+----
+scripts/create-certs.sh
+----
+
+Next, start the `books-server` application and the Redis database with a Spring Boot profile that modifies the Spring Boot application configuration and the Docker Compose configuration for Redis:
+
+[source,bash]
+----
+./gradlew :books-server:bootRun --args='--spring.profiles.active=ssl'
+----
+
+When the server application is running and ready to accept connections, it should display log messages containing text similar to this example:
+
+[source]
+----
+...
+... o.s.b.d.c.l.DockerComposeLifecycleManager : Using Docker Compose file '/home/user/projects/spring-boot-ssl-demo/books-server/docker-compose.yml'
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis-ssl  Creating
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis-ssl  Created
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis-ssl  Starting
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis-ssl  Started
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis-ssl  Waiting
+... o.s.boot.docker.compose.core.DockerCli   :  Container redis-ssl  Healthy
+...
+... o.example.books.server.BooksApplication  : Started BooksApplication in 2.0 seconds (process running for 2.2)
+----
+
+NOTE: If the server application is run using any other means (such as an IDE), make sure that the current working directory is the directory containing the `books-server/docker-compose.yml` file so that the Redis server is started automatically.
+
+Next, run the `books-client` application with the same Spring Boot profile:
+
+[source,bash]
+----
+./gradlew :books-client:bootRun --args='--spring.profiles.active=ssl'
+----
+
+The client application should start, with output similar to the following:
+
+[source]
+----
+Attempting to connect to server with RestTemplate
+
+Successfully connected to server with RestTemplate and received response:
+Book[...]
+Book[...]
+...
+
+Attempting to connect to server with RestClient
+
+Successfully connected to server with RestClient and received response:
+Book[...]
+Book[...]
+...
+
+Attempting to connect to server with WebClient
+
+Successfully connected to server with WebClient and received response:
+Book[...]
+Book[...]
+...
+----
+
+The list of books from the server can be viewed as JSON at `http://localhost:8080/books` or as an HTML page at `http://localhost:8080`.

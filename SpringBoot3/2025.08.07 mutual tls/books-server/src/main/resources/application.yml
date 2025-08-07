@@ -1,0 +1,46 @@
+spring:
+  docker:
+    compose:
+      profiles:
+        active: "default"
+
+server:
+  port: 8081
+
+cert-base-path: "classpath:"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "ssl"
+  docker:
+    compose:
+      profiles:
+        active: "ssl"
+  data:
+    redis:
+      ssl:
+        bundle: "redis"
+  ssl:
+    bundle:
+      pem:
+        web:
+          keystore:
+            certificate: "${cert-base-path}web-server-certs/tls.crt"
+            private-key: "${cert-base-path}web-server-certs/tls.key"
+          truststore:
+            certificate: "${cert-base-path}web-server-certs/ca.crt"
+        redis:
+          keystore:
+            certificate: "${cert-base-path}redis-client-certs/tls.crt"
+            private-key: "${cert-base-path}redis-client-certs/tls.key"
+          truststore:
+            certificate: "${cert-base-path}redis-client-certs/ca.crt"
+
+server:
+  port: 8443
+  ssl:
+    bundle: "web"
+    client-auth: NEED
+
